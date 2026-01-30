@@ -4,7 +4,12 @@ import { test, expect } from '@playwright/test';
 
 test('deve consultar pedido aprovado', async ({ page }) => {
 
+  //Test Data
+
+  const order = 'VLO-P59YVP';
+
   //Arrange
+
   await page.goto('http://localhost:5173/');
   await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
   await page.getByRole('link', { name: 'Consultar Pedido' }).click();
@@ -12,19 +17,35 @@ test('deve consultar pedido aprovado', async ({ page }) => {
 
   //Act
 
-  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill('VLO-P59YVP');
-  //await page.getByPlaceholder('Ex: VLO-ABC123').fill('VLO-P59YVP');
-  //await page.getByLabel('Número do Pedido').fill('VLO-P59YVP');
+  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
+  //await page.getByPlaceholder('Ex: VLO-ABC123').fill(order);
+  //await page.getByLabel('Número do Pedido').fill(order);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
   //await page.getByTestId('search-order-button').click();
 
   //Assert
+
+  // abordagem 1 -  em caso de ter o TestId
+
   // await expect(page.getByTestId('order-result-id')).toBeVisible({ timeout: 10_000 });
-  // await expect(page.getByTestId('order-result-id')).toContainText('VLO-P59YVP');
+  // await expect(page.getByTestId('order-result-id')).toContainText(order);
   // await expect(page.getByTestId('order-result-status')).toBeVisible();
   // await expect(page.getByTestId('order-result-status')).toContainText('APROVADO');
 
-  await expect(page.getByText('VLO-P59YVP')).toBeVisible({ timeout: 10_000 });
+  //abordagem 2
+
+  // const orderCode = page.locator('//p[text()="Pedido"]/..//p[text()="VLO-P59YVP"]');
+  // await expect(orderCode).toBeVisible({ timeout: 10_000 });
+
+  //abordagem 3
+
+  const containerPedido = page.getByRole('paragraph')
+    .filter({ hasText: /^Pedido$/ })
+    .locator('..') //vai para o elemento pai
+
+  await expect(containerPedido).toContainText(order,{ timeout: 10_000 });
+
+
   await expect(page.getByText('APROVADO')).toBeVisible();
 
 });
