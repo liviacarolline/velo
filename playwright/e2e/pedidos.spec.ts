@@ -1,8 +1,42 @@
 import { test, expect } from '@playwright/test';
 
+import { generateOrderCode } from '../support/helpers';
+
 ///AAA - Arrange, Act, Assert
 
 ///PAV - Preparar, Agir, Validar
+
+test.describe('Consultar Pedido', () => { 
+
+
+  // test.beforeAll(async ({ page }) => {
+  //   console.log(
+  //     'beforeAll: roda uma vez antes de todos os testes');
+  // });
+
+  test.beforeEach(async ({ page }) => {
+
+    await page.goto('http://localhost:5173/');
+    await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
+    
+    await page.getByRole('link', { name: 'Consultar Pedido' }).click();
+    await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
+   
+
+  });
+
+  // test.afterEach(async ({ page }) => {
+  //   console.log(
+  //     'afterEach: roda depois de cada teste');
+  // });
+
+  // test.afterAll(async ({ page }) => {
+  //   console.log(
+  //     'afterAll: roda uma vez depois de todos os testes');
+
+  // });
+
+  
 
 test('deve consultar pedido aprovado', async ({ page }) => {
 
@@ -10,20 +44,13 @@ test('deve consultar pedido aprovado', async ({ page }) => {
 
   const order = 'VLO-P59YVP';
 
-  //Arrange
+  //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
-  await page.goto('http://localhost:5173/');
-  await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
-  await page.getByRole('link', { name: 'Consultar Pedido' }).click();
-  await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
 
   //Act
 
   await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
-  //await page.getByPlaceholder('Ex: VLO-ABC123').fill(order);
-  //await page.getByLabel('Número do Pedido').fill(order);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
-  //await page.getByTestId('search-order-button').click();
 
   //Assert
 
@@ -45,24 +72,20 @@ test('deve consultar pedido aprovado', async ({ page }) => {
     .filter({ hasText: /^Pedido$/ })
     .locator('..') //vai para o elemento pai
 
-  await expect(containerPedido).toContainText(order,{ timeout: 10_000 });
+  await expect(containerPedido).toContainText(order, { timeout: 10_000 });
   await expect(page.getByText('APROVADO')).toBeVisible();
 
 });
 
 test('deve exibir mensagem quando o pedido não for encontrado', async ({ page }) => {
 
-  const order = 'VLO-ABC123';
+  const order = generateOrderCode();
 
-  //Arrange
+  //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
-  await page.goto('http://localhost:5173/');
-  await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
-  await page.getByRole('link', { name: 'Consultar Pedido' }).click();
-  await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
-  
+
   //Act
-  
+
   await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
@@ -91,5 +114,7 @@ test('deve exibir mensagem quando o pedido não for encontrado', async ({ page }
     - heading "Pedido não encontrado" [level=3]
     - paragraph: Verifique o número do pedido e tente novamente
     `);
+
+});
 
 });
