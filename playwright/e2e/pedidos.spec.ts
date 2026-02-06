@@ -33,7 +33,6 @@ test.describe('Consultar Pedido', () => {
   // test.afterAll(async ({ page }) => {
   //   console.log(
   //     'afterAll: roda uma vez depois de todos os testes');
-
   // });
 
   
@@ -42,14 +41,26 @@ test('deve consultar pedido aprovado', async ({ page }) => {
 
   //Test Data
 
-  const order = 'VLO-P59YVP';
+  //const order = 'VLO-P59YVP';
+
+  const order = {
+    number: 'VLO-P59YVP',
+    status: 'APROVADO',
+    color: 'Midnight Black',
+    wheelType: 'sport Wheels',
+    customer: {
+      name: 'Lívia Teste',
+      email: 'teste@teste.com',
+    },
+    payment: 'À Vista'
+  }
 
   //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
 
   //Act
 
-  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
+  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
   //Assert
@@ -77,32 +88,32 @@ test('deve consultar pedido aprovado', async ({ page }) => {
 
   //abordagem 4
 
-  await expect(page.getByTestId(`order-result-${order}`)).toMatchAriaSnapshot(`
+  await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
     - img
     - paragraph: Pedido
-    - paragraph: ${order}
+    - paragraph: ${order.number}
     - img
-    - text: APROVADO
+    - text: ${order.status}
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
     - paragraph: Cor
-    - paragraph: Midnight Black
+    - paragraph: ${order.color}
     - paragraph: Interior
     - paragraph: cream
     - paragraph: Rodas
-    - paragraph: sport Wheels
+    - paragraph: ${order.wheelType}
     - heading "Dados do Cliente" [level=4]
     - paragraph: Nome
-    - paragraph: Lívia Teste
+    - paragraph: ${order.customer.name}
     - paragraph: Email
-    - paragraph: teste@teste.com
+    - paragraph: ${order.customer.email}
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
     - paragraph: /\\d+\\/\\d+\\/\\d+/
     - heading "Pagamento" [level=4]
-    - paragraph: À Vista
+    - paragraph: ${order.payment}
     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
 
@@ -112,38 +123,48 @@ test('deve consultar pedido reprovado', async ({ page }) => {
 
   //Test Data
 
-  const order = 'VLO-K87II2';
+  const order = {
+    number: 'VLO-K87II2',
+    status: 'REPROVADO',
+    color: 'Midnight Black',
+    wheelType: 'sport Wheels',
+    customer: {
+      name: 'Ana Maria',
+      email: 'anamaria@teste.com',
+    },
+    payment: 'À Vista'
+  }
 
   //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
 
   //Act
 
-  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
+  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
   await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
   //Assert
 
-  await expect(page.getByTestId(`order-result-${order}`)).toMatchAriaSnapshot(`
+  await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
     - img
     - paragraph: Pedido
-    - paragraph: ${order}
+    - paragraph: ${order.number}
     - img
-    - text: REPROVADO
+    - text: ${order.status}
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
     - paragraph: Cor
-    - paragraph: Midnight Black
+    - paragraph: ${order.color}
     - paragraph: Interior
     - paragraph: cream
     - paragraph: Rodas
-    - paragraph: sport Wheels
+    - paragraph: ${order.wheelType}
     - heading "Dados do Cliente" [level=4]
     - paragraph: Nome
-    - paragraph: Ana Maria
+    - paragraph: ${order.customer.name}
     - paragraph: Email
-    - paragraph: anamaria@teste.com
+    - paragraph: ${order.customer.email}
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
