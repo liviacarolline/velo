@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-
 import { generateOrderCode } from '../support/helpers';
+import { OrderLockupPage } from '../support/pages/OrderLockupPage';
 
 ///AAA - Arrange, Act, Assert
 
@@ -36,7 +36,6 @@ test.describe('Consultar Pedido', () => {
   // });
 
 
-
   test('deve consultar pedido aprovado', async ({ page }) => {
 
     //Test Data
@@ -60,8 +59,8 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+    const orderLockupPage = new OrderLockupPage(page);
+    await orderLockupPage.searchOrder(order.number);
 
     //Assert
 
@@ -151,8 +150,8 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+    const orderLockupPage = new OrderLockupPage(page);
+    await orderLockupPage.searchOrder(order.number);
 
     //Assert
 
@@ -219,8 +218,8 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+    const orderLockupPage = new OrderLockupPage(page);
+    await orderLockupPage.searchOrder(order.number);
 
     //Assert
 
@@ -266,8 +265,6 @@ test.describe('Consultar Pedido', () => {
 
   });
 
-
-
   test('deve exibir mensagem quando o pedido não for encontrado', async ({ page }) => {
 
     const order = generateOrderCode();
@@ -277,8 +274,8 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+    const orderLockupPage = new OrderLockupPage(page);
+    await orderLockupPage.searchOrder(order);
 
     //Assert
 
