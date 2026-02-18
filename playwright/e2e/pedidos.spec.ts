@@ -78,7 +78,7 @@ test.describe('Consultar Pedido', () => {
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
-    await orderLookupPage.expectStatusBadge(order.status);
+    await orderLookupPage.validateStatusBadge(order.status);
 
   });
 
@@ -138,7 +138,7 @@ test.describe('Consultar Pedido', () => {
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
-    await orderLookupPage.expectStatusBadge(order.status);
+    await orderLookupPage.validateStatusBadge(order.status);
 
   });
 
@@ -198,7 +198,7 @@ test.describe('Consultar Pedido', () => {
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
-    await orderLookupPage.expectStatusBadge(order.status);
+    await orderLookupPage.validateStatusBadge(order.status);
 
   });
 
