@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
-
 import { generateOrderCode } from '../support/helpers';
-
-
+import { Navbar } from '../support/components/Navbar';
+import { LandingPage } from '../support/pages/LandingPage';
 import { OrderLookupPage, OrderDetails} from '../support/pages/OrderLookupPage';
 
 ///AAA - Arrange, Act, Assert
@@ -11,15 +10,14 @@ import { OrderLookupPage, OrderDetails} from '../support/pages/OrderLookupPage';
 
 test.describe('Consultar Pedido', () => {
 
+  let orderLookupPage: OrderLookupPage;
 
   test.beforeEach(async ({ page }) => {
 
-    await page.goto('http://localhost:5173/');
-    await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
-
-    await page.getByRole('link', { name: 'Consultar Pedido' }).click();
-    await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
-
+    await new LandingPage(page).goto();
+    await new Navbar(page).orderLookupLink();
+    orderLookupPage = new OrderLookupPage(page);
+    await new OrderLookupPage(page).validatePageLoaded();
 
   });
 
@@ -42,7 +40,7 @@ test.describe('Consultar Pedido', () => {
     //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
     //Act
-    const orderLookupPage = new OrderLookupPage(page);
+
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
@@ -75,7 +73,6 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
@@ -108,7 +105,6 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
@@ -129,7 +125,6 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
-    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order);
 
     //Assert
@@ -142,7 +137,6 @@ test.describe('Consultar Pedido', () => {
   test('deve exibir mensagem quando o código do pedido está fora do padrão', async ({ page }) => {
     
     const orderCode = 'XYZ-999-INVALIDO'
-    const orderLookupPage = new OrderLookupPage(page);
 
     await orderLookupPage.searchOrder(orderCode)
     await orderLookupPage.validateOrderNotFound()
