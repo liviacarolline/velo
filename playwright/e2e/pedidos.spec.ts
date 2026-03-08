@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
+
 import { generateOrderCode } from '../support/helpers';
-import { OrderLookupPage } from '../support/pages/OrderLookupPage';
+
+
+import { OrderLookupPage, OrderDetails} from '../support/pages/OrderLookupPage';
 
 ///AAA - Arrange, Act, Assert
 
@@ -8,11 +11,8 @@ import { OrderLookupPage } from '../support/pages/OrderLookupPage';
 
 test.describe('Consultar Pedido', () => {
 
-  let orderLookupPage: OrderLookupPage;
 
   test.beforeEach(async ({ page }) => {
-
-    orderLookupPage = new OrderLookupPage(page);
 
     await page.goto('http://localhost:5173/');
     await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
@@ -20,17 +20,18 @@ test.describe('Consultar Pedido', () => {
     await page.getByRole('link', { name: 'Consultar Pedido' }).click();
     await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
 
+
   });
 
   test('deve consultar pedido aprovado', async ({ page }) => {
 
     //Test Data
 
-    const order = {
+    const order : OrderDetails = {
       number: 'VLO-P59YVP',
-      status: 'APROVADO' as const,
+      status: 'APROVADO',
       color: 'Midnight Black',
-      wheelType: 'sport Wheels',
+      wheels: 'sport Wheels',
       customer: {
         name: 'Lívia Teste',
         email: 'teste@teste.com',
@@ -41,40 +42,12 @@ test.describe('Consultar Pedido', () => {
     //Arrange - dado que o usuário está na página de consulta de pedido - implementado no beforeEach
 
     //Act
-
+    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
 
-    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
-      - img
-      - paragraph: Pedido
-      - paragraph: ${order.number}
-      - status:
-        - img
-        - text: ${order.status}
-      - img "Velô Sprint"
-      - paragraph: Modelo
-      - paragraph: Velô Sprint
-      - paragraph: Cor
-      - paragraph: ${order.color}
-      - paragraph: Interior
-      - paragraph: cream
-      - paragraph: Rodas
-      - paragraph: ${order.wheelType}
-      - heading "Dados do Cliente" [level=4]
-      - paragraph: Nome
-      - paragraph: ${order.customer.name}
-      - paragraph: Email
-      - paragraph: ${order.customer.email}
-      - paragraph: Loja de Retirada
-      - paragraph
-      - paragraph: Data do Pedido
-      - paragraph: /\\d+\\/\\d+\\/\\d+/
-      - heading "Pagamento" [level=4]
-      - paragraph: ${order.payment}
-      - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
-      `);
+    await orderLookupPage.validateOrderDetails(order);
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
@@ -86,11 +59,11 @@ test.describe('Consultar Pedido', () => {
 
     //Test Data
 
-    const order = {
+    const order: OrderDetails = {
       number: 'VLO-K87II2',
-      status: 'REPROVADO' as const,
+      status: 'REPROVADO',
       color: 'Midnight Black',
-      wheelType: 'sport Wheels',
+      wheels: 'sport Wheels',
       customer: {
         name: 'Ana Maria',
         email: 'anamaria@teste.com',
@@ -102,39 +75,12 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
+    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
 
-    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
-      - img
-      - paragraph: Pedido
-      - paragraph: ${order.number}
-      - status:
-        - img
-        - text: ${order.status}
-      - img "Velô Sprint"
-      - paragraph: Modelo
-      - paragraph: Velô Sprint
-      - paragraph: Cor
-      - paragraph: ${order.color}
-      - paragraph: Interior
-      - paragraph: cream
-      - paragraph: Rodas
-      - paragraph: ${order.wheelType}
-      - heading "Dados do Cliente" [level=4]
-      - paragraph: Nome
-      - paragraph: ${order.customer.name}
-      - paragraph: Email
-      - paragraph: ${order.customer.email}
-      - paragraph: Loja de Retirada
-      - paragraph
-      - paragraph: Data do Pedido
-      - paragraph: /\\d+\\/\\d+\\/\\d+/
-      - heading "Pagamento" [level=4]
-      - paragraph: À Vista
-      - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
-      `);
+    await orderLookupPage.validateOrderDetails(order);
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
@@ -146,11 +92,11 @@ test.describe('Consultar Pedido', () => {
 
     //Test Data
 
-    const order = {
+    const order: OrderDetails = {
       number: 'VLO-XFKFYZ',
-      status: 'EM_ANALISE' as const,
+      status: 'EM_ANALISE',
       color: 'Glacier Blue',
-      wheelType: 'aero Wheels',
+      wheels: 'aero Wheels',
       customer: {
         name: 'João da Silva',
         email: 'joao@teste.com',
@@ -162,39 +108,12 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
+    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order.number);
 
     //Assert
 
-    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
-      - img
-      - paragraph: Pedido
-      - paragraph: ${order.number}
-      - status:
-        - img
-        - text: ${order.status}
-      - img "Velô Sprint"
-      - paragraph: Modelo
-      - paragraph: Velô Sprint
-      - paragraph: Cor
-      - paragraph: ${order.color}
-      - paragraph: Interior
-      - paragraph: cream
-      - paragraph: Rodas
-      - paragraph: ${order.wheelType}
-      - heading "Dados do Cliente" [level=4]
-      - paragraph: Nome
-      - paragraph: ${order.customer.name}
-      - paragraph: Email
-      - paragraph: ${order.customer.email}
-      - paragraph: Loja de Retirada
-      - paragraph
-      - paragraph: Data do Pedido
-      - paragraph: /\\d+\\/\\d+\\/\\d+/
-      - heading "Pagamento" [level=4]
-      - paragraph: À Vista
-      - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
-      `);
+    await orderLookupPage.validateOrderDetails(order);
 
     // Valida cor de fundo, cor do texto e ícone do badge — lógica encapsulada no Page Object
 
@@ -210,16 +129,23 @@ test.describe('Consultar Pedido', () => {
 
     //Act
 
+    const orderLookupPage = new OrderLookupPage(page);
     await orderLookupPage.searchOrder(order);
 
     //Assert
 
-    await expect(page.locator('#root')).toMatchAriaSnapshot(`
-      - img
-      - heading "Pedido não encontrado" [level=3]
-      - paragraph: Verifique o número do pedido e tente novamente
-      `);
+    await orderLookupPage.validateOrderNotFound();
 
   });
+
+
+  test('deve exibir mensagem quando o código do pedido está fora do padrão', async ({ page }) => {
+    
+    const orderCode = 'XYZ-999-INVALIDO'
+    const orderLookupPage = new OrderLookupPage(page);
+
+    await orderLookupPage.searchOrder(orderCode)
+    await orderLookupPage.validateOrderNotFound()
+  })
 
 });
